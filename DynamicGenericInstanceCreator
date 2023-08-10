@@ -26,5 +26,8 @@ namespace DynamicGenericInstance
 
             return (T)constructor.Invoke(constructorParams);
         }
+
+ var genericType = typeof(MyGenericClass<>).MakeGenericType(typeof(int));
+            var instance = Activator.CreateInstance(genericType, 42);
     }
 }
