@@ -1,0 +1,30 @@
+namespace DynamicGenericInstance
+{
+    public class DynamicGenericInstanceCreator
+    {
+        public T CreateInstance<T>(params object[] constructorParams)
+        {
+            Type type = typeof(T);
+
+            if (type.GetConstructor(Type.EmptyTypes) == null)
+            {
+                throw new InvalidOperationException($"Type {type.Name} does not have a parameterless constructor.");
+            }
+
+            Type[] paramTypes = new Type[constructorParams.Length];
+            for (int i = 0; i < constructorParams.Length; i++)
+            {
+                paramTypes[i] = constructorParams[i].GetType();
+            }
+
+            ConstructorInfo constructor = type.GetConstructor(paramTypes);
+
+            if (constructor == null)
+            {
+                throw new InvalidOperationException($"No suitable constructor found for the given parameter types.");
+            }
+
+            return (T)constructor.Invoke(constructorParams);
+        }
+    }
+}
