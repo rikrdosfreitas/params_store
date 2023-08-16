@@ -1,19 +1,49 @@
 public class InstanceCreator
 {
-    public static T CreateInstanceWithDefaults<T>() where T : new()
+    public static object CreateInstanceWithDefaults(Type type)
     {
-        T instance = new T();
-        PropertyInfo[] properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+        if (type == null)
+        {
+            throw new ArgumentNullException(nameof(type));
+        }
+
+        // Check if the type has a default (parameterless) constructor
+        if (type.GetConstructor(Type.EmptyTypes) == null)
+        {
+            throw new InvalidOperationException($"Type {type.Name} does not have a parameterless constructor.");
+        }
+
+        object instance = Activator.CreateInstance(type);
+
+        // Set default values for properties with private setters
+        PropertyInfo[] properties = type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
         foreach (PropertyInfo property in properties)
         {
             if (property.CanWrite)
             {
-                Type propertyType = property.PropertyType;
-                object defaultValue = GetDefaultValue(propertyType);
-                property.SetValue(instance, defaultValue);
+                // If property has a private setter
+                MethodInfo setter = property.GetSetMethod(nonPublic: true);
+                if (setter != null)
+                {
+                    object defaultValue = GetDefaultValue(property.PropertyType);
+                    property.SetValue(instance, defaultValue);
+                }
             }
         }
 
         return instance;
     }
+
+    private static object GetDefaultValue(Type type)
+    {
+        if (type.IsValueType)
+        {
+            return Activator.CreateInstance(type);
+        }
+        else
+        {
+            return null;
+        }
+    }
+}
