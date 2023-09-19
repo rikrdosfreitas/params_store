@@ -1,4 +1,4 @@
-9public class DefaultValueSetter
+99public class DefaultValueSetter
 {
     public static object CreateInstanceWithDefaultValues(Type type)
     {
@@ -92,3 +92,38 @@ public class Program
         return texto;
     }
 }
+
+
+using System;
+using System.Security.Cryptography;
+using System.Text;
+
+public class Program
+{
+    public static Guid TextToGuid(string input)
+    {
+        using (MD5 md5 = MD5.Create())
+        {
+            byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+            byte[] hashBytes = md5.ComputeHash(inputBytes);
+            return new Guid(hashBytes);
+        }
+    }
+
+    public static string GuidToText(Guid guid)
+    {
+        return guid.ToString();
+    }
+
+    public static void Main()
+    {
+        string textoOriginal = "Exemplo de texto com até 255 caracteres";
+        Guid guidGerado = TextToGuid(textoOriginal);
+        string textoRecuperado = GuidToText(guidGerado);
+
+        Console.WriteLine("Texto Original: " + textoOriginal);
+        Console.WriteLine("GUID Gerado: " + guidGerado);
+        Console.WriteLine("Texto Recuperado: " + textoRecuperado);
+    }
+}
+
