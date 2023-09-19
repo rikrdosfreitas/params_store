@@ -128,3 +128,27 @@ class Program
         return System.Text.Encoding.UTF8.GetString(bytes);
     }
 }
+
+public class TextToGuidConverter
+{
+    public static Guid ConvertTextToGuid(string text)
+    {
+        byte[] bytes = Encoding.UTF8.GetBytes(text.PadRight(255)); // Garante que o texto tenha exatamente 255 caracteres
+        return new Guid(bytes);
+    }
+
+    public static string ConvertGuidToText(Guid guid)
+    {
+        byte[] bytes = guid.ToByteArray();
+        string text = Encoding.UTF8.GetString(bytes);
+        return text.TrimEnd('\0'); // Remove os caracteres nulos que podem ter sido adicionados no processo de conversão.
+    }
+}
+
+string textoOriginal = "Este é um texto de exemplo com 255 caracteres."; // 47 caracteres
+Guid guid = TextToGuidConverter.ConvertTextToGuid(textoOriginal);
+
+string textoDeVolta = TextToGuidConverter.ConvertGuidToText(guid);
+
+Console.WriteLine(textoDeVolta);
+ok 
