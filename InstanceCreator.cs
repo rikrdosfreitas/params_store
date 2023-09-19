@@ -1,4 +1,4 @@
-9public class DefaultValueSetter
+89public class DefaultValueSetter
 {
     public static object CreateInstanceWithDefaultValues(Type type)
     {
@@ -90,5 +90,41 @@ public class Program
         byte[] bytes = BitConverter.GetBytes(numero);
         string texto = Encoding.UTF8.GetString(bytes);
         return texto;
+    }
+}
+
+
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        string textoOriginal = "Lorem ipsum dolor sit amet... (255 caracteres)";
+
+        // Convertendo o texto para um GUID
+        Guid guid = Guid.NewGuid();
+        string guidString = Convert.ToBase64String(GuidToBytes(guid));
+
+        Console.WriteLine("Texto Original: " + textoOriginal);
+        Console.WriteLine("GUID: " + guidString);
+
+        // Convertendo de volta para o texto original
+        Guid novoGuid = new Guid(Convert.FromBase64String(guidString));
+        string novoTexto = BytesToString(GuidToBytes(novoGuid));
+
+        Console.WriteLine("Novo Texto: " + novoTexto);
+    }
+
+    // Método para converter um GUID em um array de bytes
+    static byte[] GuidToBytes(Guid guid)
+    {
+        return guid.ToByteArray();
+    }
+
+    // Método para converter um array de bytes em uma string
+    static string BytesToString(byte[] bytes)
+    {
+        return System.Text.Encoding.UTF8.GetString(bytes);
     }
 }
