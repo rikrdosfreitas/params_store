@@ -35,3 +35,27 @@ public class DefaultValueSetter
         }
     }
 }
+
+
+using System;
+using System.Security.Cryptography;
+using System.Text;
+
+public class Program
+{
+    public static long TextToLong(string texto)
+    {
+        using (SHA256 sha256 = SHA256.Create())
+        {
+            byte[] hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(texto));
+            return BitConverter.ToInt64(hashBytes, 0);
+        }
+    }
+
+    public static void Main()
+    {
+        string texto = "SeuTextoAqui";
+        long valorConvertido = TextToLong(texto);
+        Console.WriteLine(valorConvertido);
+    }
+}
