@@ -1,4 +1,4 @@
-public class DefaultValueSetter
+9public class DefaultValueSetter
 {
     public static object CreateInstanceWithDefaultValues(Type type)
     {
@@ -57,5 +57,38 @@ public class Program
         string texto = "SeuTextoAqui";
         long valorConvertido = TextToLong(texto);
         Console.WriteLine(valorConvertido);
+    }
+}
+
+using System;
+using System.Text;
+
+public class Program
+{
+    public static void Main()
+    {
+        string textoOriginal = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas vestibulum.";
+        
+        // Convertendo o texto para Int64
+        long numeroConvertido = ConverterTextoParaInt64(textoOriginal);
+        Console.WriteLine("Texto convertido para Int64: " + numeroConvertido);
+        
+        // Convertendo de volta para texto
+        string textoRevertido = ConverterInt64ParaTexto(numeroConvertido);
+        Console.WriteLine("Int64 revertido para texto: " + textoRevertido);
+    }
+
+    public static long ConverterTextoParaInt64(string texto)
+    {
+        byte[] bytes = Encoding.UTF8.GetBytes(texto);
+        long resultado = BitConverter.ToInt64(bytes, 0);
+        return resultado;
+    }
+
+    public static string ConverterInt64ParaTexto(long numero)
+    {
+        byte[] bytes = BitConverter.GetBytes(numero);
+        string texto = Encoding.UTF8.GetString(bytes);
+        return texto;
     }
 }
