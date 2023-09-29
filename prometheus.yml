@@ -1,0 +1,16 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+      
+  - job_name: 'some_job'
+    honor_labels: true
+    scrape_interval: 500ms
+    static_configs:
+      - targets: 
+        - localhost:1234
+        - 172.28.16.1:1234
